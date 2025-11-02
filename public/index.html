@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Run Underwriting Engine</title>
+  <style>
+    body { font-family: sans-serif; padding: 2em; background: #f8f8ff; }
+    #status { margin-top: 1em; font-weight: bold; }
+    button { font-size: 1.2em; padding: 0.7em 2.5em; background: #0064e0; color: #fff; border-radius: 5px; border: none; cursor:pointer;}
+    button:active { background: #003b84; }
+  </style>
+</head>
+<body>
+  <h1>Run Underwriting Engine</h1>
+  <button id="runBtn">Run Now</button>
+  <div id="status"></div>
+  <script>
+    document.getElementById('runBtn').onclick = async function() {
+      document.getElementById('status').textContent = "Running...";
+      try {
+        const resp = await fetch("/api/trigger-underwriting", {
+          method: "POST"
+        });
+        const data = await resp.json();
+        if (resp.ok) {
+          document.getElementById('status').textContent = data.message;
+        } else {
+          document.getElementById('status').textContent = (data.message || "Error: " + data.error);
+        }
+      } catch (e) {
+        document.getElementById('status').textContent = "❌ " + e.toString();
+      }
+    }
+  </script>
+</body>
+</html>
